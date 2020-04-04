@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.craunicproductions.coderswag.Model.Product
 import com.craunicproductions.coderswag.R
 
-class ProductsAdapter(val context: Context, val products: List<Product>) : RecyclerView.Adapter<ProductsAdapter.Holder>() {
-    inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ProductsAdapter(val context: Context, val products: List<Product>, val onSelect: (Product) -> Unit) : RecyclerView.Adapter<ProductsAdapter.Holder>() {
+    inner class Holder(itemView: View, val onSelect: (Product) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val image = itemView.findViewById<ImageView>(R.id.productImage)
         val name = itemView.findViewById<TextView>(R.id.productName)
         val price = itemView.findViewById<TextView>(R.id.productPrice)
@@ -19,6 +19,7 @@ class ProductsAdapter(val context: Context, val products: List<Product>) : Recyc
         fun bindProduct(product: Product, context: Context) {
             val resourceID = context.resources.getIdentifier(product.image, "drawable", context.packageName)
             image.setImageResource(resourceID)
+            image.setOnClickListener { onSelect(product) }
             name.text = product.title
             price.text = product.price
         }
@@ -26,7 +27,7 @@ class ProductsAdapter(val context: Context, val products: List<Product>) : Recyc
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(context).inflate(R.layout.product_list_item, parent, false)
-        return Holder(view)
+        return Holder(view, onSelect)
     }
 
     override fun getItemCount(): Int {

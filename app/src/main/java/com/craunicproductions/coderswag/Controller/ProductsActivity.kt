@@ -1,5 +1,6 @@
 package com.craunicproductions.coderswag.Controller
 
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,7 +21,12 @@ class ProductsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_products)
 
         category = intent.getParcelableExtra(Constants.category.key)!!
-        adapter = ProductsAdapter(this, DataService.getProducts(category))
+        adapter = ProductsAdapter(this, DataService.getProducts(category)) { product ->
+            println("product: ${ product.title }")
+            val intent = Intent(this, ProductActivity::class.java)
+            intent.putExtra(Constants.product.key, product)
+            startActivity(intent)
+        }
 
         val orientation = resources.configuration.orientation
         val screenSize = resources.configuration.screenWidthDp
